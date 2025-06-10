@@ -1,0 +1,107 @@
+@model EmployeeEditModel
+
+@{
+    ViewData["Title"] = "Edit Employee";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var roles = ViewBag.Roles as List<string> ?? new List<string>();
+    var selectedRoles = Model?.SelectedRoles ?? new List<string>();
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow rounded-4">
+                <div
+                    class="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top-4 py-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-user-pen me-2"></i> Edit Employee</h5>
+                    <a asp-action="Index" class="btn btn-sm btn-light">
+                        <i class="fa-solid fa-list me-1"></i> Back to List
+                    </a>
+                </div>
+                <div class="card-body px-4 py-4">
+                    <form method="post">
+                        @* Hidden ID *@
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label fw-semibold">👤 Full Name</label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold">📧 Email</label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email address" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">🔒 Password</label>
+                            <input type="password" value="********" class="form-control" readonly />
+                            <span class="text-muted small">Password is not editable.</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="HourlyWage" class="form-label fw-semibold">💰 Hourly Wage</label>
+                            <input asp-for="HourlyWage" class="form-control" />
+                            <span asp-validation-for="HourlyWage" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="IsActive" class="form-label fw-semibold">🟢 Active Status</label>
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="card-header text-center">
+                                <h6 class="mb-0">🛡️ Roles</h6>
+                            </div>
+                            <div class="card-body">
+
+                                @foreach (var role in roles)
+                                {
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="@role" name="SelectedRoles"
+                                            value="@role" @(selectedRoles.Contains(role) ? "checked" : "") />
+                                        <label class="form-check-label" for="@role">@role</label>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">📊 Salaries</label>
+                            <div>
+                                @if (Model!.Salaries != null && Model.Salaries.Any() && Model.IsActive)
+                                {
+                                    foreach (var salary in Model.Salaries)
+                                    {
+                                        <span class="badge bg-secondary me-1">@salary.ToString("C")</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-muted">No Salaries</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

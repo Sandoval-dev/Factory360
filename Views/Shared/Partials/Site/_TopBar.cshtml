@@ -1,0 +1,60 @@
+<section class="top-bar py-2 border-bottom shadow-sm">
+    <div class="container">
+        <div class="row gy-2 align-items-center justify-content-between">
+
+            <!-- Logo -->
+            <div class="col-6 col-sm-4 col-lg-2">
+                <a href="/" class="navbar-brand text-primary fw-bold fs-4">
+                    <i class="fa-solid fa-film me-1"></i> Factory 360
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="col-12 col-lg-5 order-lg-1">
+                <form asp-controller="Movie" asp-action="List" method="get">
+                    <div class="input-group">
+                        <input type="text" value="@ViewData["q"]" name="q" placeholder="Search movies..."
+                            class="form-control rounded-start">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- User Buttons -->
+            <div class="col-6 col-sm-8 col-lg-5 text-end order-lg-2">
+                <div class="d-flex justify-content-end flex-wrap gap-2">
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm">
+                            <i class="fa fa-sign-out"></i> <span class="ms-1 d-none d-sm-inline">Logout</span>
+                        </a>
+                        <a asp-controller="Account" asp-action="EditUser" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-user"></i> <span class="ms-1 d-none d-sm-inline">Profile</span>
+                        </a>
+                        @if(User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-users"></i> <span class="ms-1 d-none d-sm-inline">Admin Panel</span>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-user"></i> <span class="ms-1 d-none d-sm-inline">Login</span>
+                        </a>
+                        <a asp-controller="Account" asp-action="Create" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-user-plus"></i> <span class="ms-1 d-none d-sm-inline">Register</span>
+                        </a>
+                    }
+                    <a asp-controller="MovieList" asp-action="Index" class="btn btn-outline-danger btn-sm">
+                        <i class="fa fa-heart"></i> <span class="ms-1 d-none d-sm-inline">Listem</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

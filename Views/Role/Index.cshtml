@@ -1,0 +1,86 @@
+@using Factory360.Data
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityRole<int>>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow">
+            <div class="card-header py-1 d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Roles</h5>
+                <a asp-controller="Role" asp-action="Create" class="btn btn-sm btn-primary">
+                    <i class="fa-solid fa-plus"></i> Add
+                </a>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mb-0 align-middle">
+                        <thead class="table-secondary text-center">
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th scope="col">Role Name</th>
+                                <th style="width: 200px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var role in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">@role.Id</td>
+                                        <td>@role.Name</td>
+                                        <td class="text-center">
+                                            <div class="m-2">
+                                                @if (role.Name == "Admin")
+                                                {
+                                                    <button class="btn btn-warning" title="Cannot Edit Admin Role" disabled>
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="Role" asp-action="Edit" asp-route-id="@role.Id"
+                                                        class="btn btn-warning" title="Edit">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                }
+                                                @if (role.Name == "Admin")
+                                                {
+                                                    <button class="btn btn-danger" title="Cannot Delete Admin Role" disabled>
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="Role" asp-action="Delete" asp-route-id="@role.Id"
+                                                        class="btn btn-danger" title="Delete">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </a>
+                                                }
+                                                <a asp-controller="Employee" asp-action="Index" asp-route-role="@role.Id"
+                                                    class="btn btn-info text-white" title="View Users">
+                                                    <i class="fa-solid fa-users"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No roles found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

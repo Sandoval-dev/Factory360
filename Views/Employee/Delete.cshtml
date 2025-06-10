@@ -1,0 +1,102 @@
+@using Factory360.Data
+@model AppUser
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-danger text-white text-center">
+                <h5 class="mb-0">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    Delete Employee
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="fs-5 fw-semibold text-danger">
+                    Are you sure you want to delete <strong>@Model.FullName</strong>?
+                </p>
+
+                <p>
+                    Hourly Wage:
+                    <strong>@Model.HourlyWage.ToString("C")</strong>
+                </p>
+
+                <p>
+                    Salaries:
+                    <strong>
+                        @if (Model.AttendanceRecords != null && Model.AttendanceRecords.Any() && Model.IsActive)
+                        {
+                            var latestCheckOut = Model.AttendanceRecords.OrderByDescending(r =>
+                            r.CheckOut).FirstOrDefault();
+                            var latestCheckIn = Model.AttendanceRecords.OrderByDescending(r => r.CheckIn).FirstOrDefault();
+                            var duration = latestCheckOut?.CheckOut - latestCheckIn?.CheckIn;
+                            <span class="badge bg-secondary me-1">
+                                @if (duration.HasValue)
+                                {
+                                    @((duration.Value.TotalMinutes * Model.HourlyWage).ToString("C"))
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No Records</span>
+                                }
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger text-white">No Salaries</span>
+                        }
+                    </strong>
+                </p>
+
+                <p>
+                    Last Check-In:
+                    <strong>
+                        @if (Model.AttendanceRecords != null && Model.AttendanceRecords.Any())
+                        {
+                            var lastCheckIn = Model.AttendanceRecords.OrderByDescending(r => r.CheckIn).FirstOrDefault();
+                            <span class="badge bg-secondary">
+                                @lastCheckIn?.CheckIn.ToString("f")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No Attendance Records</span>
+                        }
+                    </strong>
+                </p>
+                <p>
+                    Last Check-Out:
+                    <strong>
+                        @if (Model.AttendanceRecords != null && Model.AttendanceRecords.Any())
+                        {
+                            var lastCheckOut = Model.AttendanceRecords.OrderByDescending(r => r.CheckOut).FirstOrDefault();
+                            <span class="badge bg-secondary">
+                                @(lastCheckOut?.CheckOut != null ? lastCheckOut.CheckOut.Value.ToString("f") : "")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No Attendance Records</span>
+                        }
+                    </strong>
+                </p>
+
+                <form asp-controller="Employee" asp-action="DeleteConfirm" method="post">
+                    <input type="hidden" name="Id" value="@Model.Id" />
+
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="fa-solid fa-trash me-1"></i> Yes, Delete
+                        </button>
+                        <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary px-4">
+                            <i class="fa-solid fa-ban me-1"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

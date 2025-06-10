@@ -1,0 +1,110 @@
+@model AdminDashboardModel
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center border-primary h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <div class="mb-3 text-primary">
+                    <i class="fas fa-user-clock fa-3x"></i>
+                </div>
+                <h5 class="card-title fw-bold text-primary">Şu An Çalışan Sayısı</h5>
+                <p class="display-4 fw-bold count" data-target="@Model.ActiveUsers">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center border-success h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <div class="mb-3 text-success">
+                    <i class="fas fa-boxes fa-3x"></i>
+                </div>
+                <h5 class="card-title fw-bold text-success">Toplam Gönderilen Ürün Sayısı</h5>
+                <p class="display-4 fw-bold count" data-target="">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center border-warning h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <div class="mb-3 text-warning">
+                    <i class="fas fa-users fa-3x"></i>
+                </div>
+                <h5 class="card-title fw-bold text-warning">Toplam Çalışan Sayısı</h5>
+                <p class="display-4 fw-bold count" data-target="@Model.TotalUsers">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center border-info h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <div class="mb-3 text-info">
+                    <i class="fas fa-user-tie fa-3x"></i>
+                </div>
+                <h5 class="card-title fw-bold text-info">En Çok Çalışan İşçi</h5>
+                <p class="display-5 fw-semibold text-truncate" title="@Model.MostWorkingUserFullName">
+                    @Model.MostWorkingUserFullName 
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center border-secondary h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <div class="mb-3 text-secondary">
+                    <i class="fas fa-user-plus fa-3x"></i>
+                </div>
+                <h5 class="card-title fw-bold text-secondary">En Son İşe Giren Çalışan</h5>
+                <p class="display-5 fw-semibold text-truncate" title="@Model.LastWorker">
+                    @Model.LastWorker
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+
+    .text-truncate {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const counters = document.querySelectorAll('.count');
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            let count = 0;
+            const speed = 50; // küçük sayı daha hızlı artar
+
+            const updateCount = () => {
+                const increment = Math.ceil(target / speed);
+                count += increment;
+                if (count > target) count = target;
+                counter.innerText = count;
+                if (count < target) {
+                    setTimeout(updateCount, 20);
+                }
+            };
+
+            updateCount();
+        });
+    });
+</script>

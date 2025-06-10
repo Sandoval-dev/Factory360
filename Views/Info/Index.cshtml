@@ -1,0 +1,113 @@
+@model PaginatedAttendanceViewModel
+
+
+@{
+    ViewData["Title"] = "Attendance Records";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div
+            class="card-header bg-warning text-dark d-flex justify-content-between align-items-center rounded-top-4 px-4 py-3">
+            <h4 class="mb-0 fw-bold"><i class="fa-solid fa-clock me-2"></i>Attendance Records</h4>
+        </div>
+
+        <div class="card-body p-0">
+            @if (!Model.Records.Any())
+            {
+                <div class="alert alert-info m-4">
+                    <i class="fa-solid fa-info-circle me-2"></i> No attendance records found.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Check-In</th>
+                                <th>Check-Out</th>
+                                <th>Total Minutes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Records.Count; i++)
+                            {
+                                var record = Model.Records[i];
+                                <tr class="text-center">
+                                    <td>@((Model.CurrentPage - 1) * 10 + i + 1)</td>
+                                    <td class="text-start fw-semibold">@record.User.FullName</td>
+                                    <td>@record.CheckIn.ToString("g")</td>
+                                    <td>
+                                        @if (record.CheckOut.HasValue)
+                                        {
+                                            @record.CheckOut.Value.ToString("g")
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark px-3 py-2">Still Working</span>
+                                        }
+                                </td>
+                                <td>
+                                    @(record.TotalHours.HasValue
+                                                                    ? $"{record.TotalHours.Value:N2} min"
+                                                                    : "-")
+                            </td>
+                            <td>
+                                <a asp-action="Delete" asp-controller="Info" asp-route-id="@record.Id"
+                                    class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                    <i class="fa-solid fa-trash me-1"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                                                }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+    @if (Model.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-center my-4">
+            <nav>
+                <ul class="pagination pagination-md">
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link bg-warning text-dark border-0 fw-semibold rounded-pill mx-1 px-4"
+                            asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">
+                            <i class="fa fa-angle-left me-2"></i> Previous
+                        </a>
+                    </li>
+
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link @(i == Model.CurrentPage ? "bg-dark text-white fw-bold" : "bg-light text-dark") border-0 rounded-circle mx-1"
+                                asp-action="Index" asp-route-page="@i"
+                                style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+
+                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link bg-warning text-dark border-0 fw-semibold rounded-pill mx-1 px-4"
+                            asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">
+                            Next <i class="fa fa-angle-right ms-2"></i>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    }
+
+
+
+</div>
